@@ -10,7 +10,6 @@ COPY "pyproject.toml" "uv.lock" ".python-version" ./
 # RUN pip install -r requirements.txt
 RUN uv sync --locked
 
-COPY ./pipeline/pipeline.py /app
+COPY ingest_data.py .
 
-ENTRYPOINT [ "uv", "run", "python", "pipeline.py" ]  
-CMD ["6"]
+ENTRYPOINT [ "uv", "run", "python", "ingest_data.py" ] 
