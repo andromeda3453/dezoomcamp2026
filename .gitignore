@@ -1,2 +1,4 @@
 *.parquet
 *.json
+.env
+.env-kestra
