@@ -5,6 +5,9 @@ from concurrent.futures import ThreadPoolExecutor
 from google.cloud import storage
 from google.api_core.exceptions import NotFound, Forbidden
 import time
+import pyarrow.parquet as pq
+import pyarrow.compute as pc
+import pyarrow as pa
 
 
 # Change this to your bucket name
@@ -16,9 +19,15 @@ client = storage.Client.from_service_account_json(CREDENTIALS_FILE)
 # If commented initialize client with the following
 # client = storage.Client(project='zoomcamp-mod3-datawarehouse')
 
+try:
+    YEAR = sys.argv[1]
+    COLOR = sys.argv[2]
+except IndexError:
+    print("Please enter a Year and taxi color")
+    sys.exit()
 
-BASE_URL = "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2024-"
-MONTHS = [f"{i:02d}" for i in range(1, 7)]
+BASE_URL = f"https://d37ci6vzurychx.cloudfront.net/trip-data/{COLOR}_tripdata_{YEAR}-"
+MONTHS = [f"{i:02d}" for i in range(1, 13)]
 DOWNLOAD_DIR = "."
 
 CHUNK_SIZE = 8 * 1024 * 1024
@@ -30,17 +39,36 @@ bucket = client.bucket(BUCKET_NAME)
 
 def download_file(month):
     url = f"{BASE_URL}{month}.parquet"
-    file_path = os.path.join(DOWNLOAD_DIR, f"yellow_tripdata_2024-{month}.parquet")
+    file_path = os.path.join(
+        DOWNLOAD_DIR, f"{COLOR}_tripdata_{YEAR}-{month}.parquet")
 
     try:
         print(f"Downloading {url}...")
         urllib.request.urlretrieve(url, file_path)
         print(f"Downloaded: {file_path}")
+                           
         return file_path
     except Exception as e:
         print(f"Failed to download {url}: {e}")
         return None
 
+
+def normalize_schema(file_path):
+
+    column = 'airport_fee' if COLOR == 'yellow' else 'ehail_fee'
+
+    try:
+        table = pq.read_table(file_path)
+        table = table.set_column(
+        table.schema.get_field_index(column),
+        column,
+        pc.cast(table[column], pa.float64())
+        )
+        pq.write_table(table, file_path)
+        print(f"{file_path} - field updated")
+    except Exception as err:
+        print(err)
+     
 
 def create_bucket(bucket_name):
     try:
@@ -76,15 +104,20 @@ def verify_gcs_upload(blob_name):
 
 
 def upload_to_gcs(file_path, max_retries=3):
-    blob_name = os.path.basename(file_path)
+    
+    
+    # blob_name = os.path.basename(file_path)
+    blob_name = os.path.join(f'{COLOR}_taxi', os.path.basename(file_path)).replace(os.sep, '/')
     blob = bucket.blob(blob_name)
     blob.chunk_size = CHUNK_SIZE
 
     create_bucket(BUCKET_NAME)
+    
 
     for attempt in range(max_retries):
         try:
-            print(f"Uploading {file_path} to {BUCKET_NAME} (Attempt {attempt + 1})...")
+            print(
+                f"Uploading {file_path} to {BUCKET_NAME} (Attempt {attempt + 1})...")
             blob.upload_from_filename(file_path)
             print(f"Uploaded: gs://{BUCKET_NAME}/{blob_name}")
 
@@ -106,8 +139,15 @@ if __name__ == "__main__":
 
     with ThreadPoolExecutor(max_workers=4) as executor:
         file_paths = list(executor.map(download_file, MONTHS))
+    
+    for file in file_paths:
+        normalize_schema(file)
 
     with ThreadPoolExecutor(max_workers=4) as executor:
-        executor.map(upload_to_gcs, filter(None, file_paths))  # Remove None values
+        executor.map(upload_to_gcs, filter(
+            None, file_paths))  # Remove None
+
+    # schema = pq.read_schema('./yellow_tripdata_2019-05.parquet')
+    # print(schema)
 
     print("All files processed and verified.")
