@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw_data
+    description: "Raw data sources for ny taxi rides"
+    database: dezoomcamp2026-485910 # Bigquery project ID
+    schema: kestra_dataset # Bigquery dataset
+    tables:
+      - name: yellowtrip_data
+      - name: greentrip_data
