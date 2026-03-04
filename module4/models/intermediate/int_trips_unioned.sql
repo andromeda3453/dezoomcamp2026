@@ -11,4 +11,4 @@ trips_unioned as (
     select *, "yellow" as taxi_type from yellow_tripdata
 )
 
-select * from trips_unioned 
+select * from trips_unioned

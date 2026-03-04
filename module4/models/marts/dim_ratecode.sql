@@ -1,9 +1,9 @@
 with
     trips_unioned as (select * from {{ ref("int_trips_deduped") }}),
-    vendors as (
-        select distinct vendor_id, {{ get_vendor_names("vendor_id") }} as vendor_name
+    ratecodes as (
+        select distinct ratecode_id, {{ get_ratecodes("ratecode_id") }} as ratecode
         from trips_unioned
     )
 
 select *
-from vendors
+from ratecodes
