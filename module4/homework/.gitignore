@@ -3,7 +3,7 @@
 target/
 dbt_packages/
 logs/
-profiles.yml
+.dbt/profiles.yml
 .user.yml
 
 # Data files for DuckDB
