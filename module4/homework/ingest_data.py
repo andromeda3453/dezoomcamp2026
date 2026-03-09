@@ -10,7 +10,7 @@ def download_and_convert_files(taxi_type, years):
     data_dir.mkdir(exist_ok=True, parents=True)
 
     for year in years:
-        for month in range(7, 13):
+        for month in range(1, 13):
             parquet_filename = f"{taxi_type}_tripdata_{year}-{month:02d}.parquet"
             parquet_filepath = data_dir / parquet_filename
 
@@ -59,9 +59,9 @@ def update_gitignore():
 if __name__ == "__main__":
     update_gitignore()
 
-    # # Yellow & Green (2019 + 2020)
-    # for taxi_type in ["yellow", "green"]:
-    #     download_and_convert_files(taxi_type, [2019, 2020])
+    # Yellow & Green (2019 + 2020)
+    for taxi_type in ["yellow", "green"]:
+        download_and_convert_files(taxi_type, [2019, 2020])
 
     # FHV (2019 ONLY)
     download_and_convert_files("fhv", [2019])
@@ -70,8 +70,8 @@ if __name__ == "__main__":
     con.execute("CREATE SCHEMA IF NOT EXISTS prod")
 
     # Load taxi tables
-    # for taxi_type in ["yellow", "green", "fhv"]:
-    for taxi_type in ["fhv"]:
+    for taxi_type in ["yellow", "green", "fhv"]:
+    # for taxi_type in ["fhv"]:
         con.execute(f"""
             CREATE OR REPLACE TABLE prod.{taxi_type}_tripdata AS
             SELECT *

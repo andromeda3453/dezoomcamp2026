@@ -330,15 +330,34 @@ wheels = [
 ]
 
 [[package]]
+name = "duckdb-cli"
+version = "1.4.4.post2"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9c/6a/1fcc02a5ff848c477b64b7f8394155e91a776efec8c07bc35f6ca876dd74/duckdb_cli-1.4.4.post2-py3-none-macosx_12_0_arm64.whl", hash = "sha256:56ec2c37c0b56d1a2485c5e1b3f9ce0b600f5b611d1fb4310d2f38d9c0dd5eb5", size = 15743455, upload-time = "2026-03-03T17:34:24.107Z" },
+    { url = "https://files.pythonhosted.org/packages/45/12/4d4d983bb3c6f6dac2bfd59506198c4a3800a21b63edbebae1c80a07767e/duckdb_cli-1.4.4.post2-py3-none-macosx_12_0_x86_64.whl", hash = "sha256:d1bff27a397804d9b0789072a109fd54442d8b36dc86f62436a69988808d0a68", size = 18086777, upload-time = "2026-03-03T17:34:50.213Z" },
+    { url = "https://files.pythonhosted.org/packages/69/8b/6b349fdd6f33c376204a67730c3ac3e410bc0943c85ffd2f69dcae1b748f/duckdb_cli-1.4.4.post2-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:fb670a557d398d79003221a1a7311729a7cdef1ecd9d98c1c828e97808199067", size = 17505652, upload-time = "2026-03-03T17:35:12.915Z" },
+    { url = "https://files.pythonhosted.org/packages/60/9e/9c7ab1ea38a032aede40d39d00b96e51a7b2e19e8bcbdf02f50d56860670/duckdb_cli-1.4.4.post2-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:af15f72a7b94c9d2b827b588942bc12571d567f92196e9038161e7da981d207f", size = 19072411, upload-time = "2026-03-03T17:34:31.299Z" },
+    { url = "https://files.pythonhosted.org/packages/05/9e/91451fbeea41571cf5a8cf9c48db6cdc4dea808f003e51f4432ad9c3204d/duckdb_cli-1.4.4.post2-py3-none-win_amd64.whl", hash = "sha256:c957a4646d2ca782399a66a1c0f872549640ea67b7d6239b6ac0eccf016bc575", size = 11804202, upload-time = "2026-03-03T17:35:30.079Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/4c/923b10549cb05700be4cc7e0fbc6d176f8d2b40383ad2e27b6c4af320974/duckdb_cli-1.4.4.post2-py3-none-win_arm64.whl", hash = "sha256:fa408e6c89af5cae207bc08dd28d758c0026a2d37a51f358fd78b54bcd1ecc35", size = 12392081, upload-time = "2026-03-03T17:35:44.062Z" },
+]
+
+[[package]]
 name = "homework"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "dbt-duckdb" },
+    { name = "duckdb" },
+    { name = "duckdb-cli" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "dbt-duckdb", specifier = ">=1.10.1" }]
+requires-dist = [
+    { name = "dbt-duckdb", specifier = ">=1.10.1" },
+    { name = "duckdb", specifier = ">=1.4.4" },
+    { name = "duckdb-cli", specifier = ">=1.4.4.post2" },
+]
 
 [[package]]
 name = "idna"

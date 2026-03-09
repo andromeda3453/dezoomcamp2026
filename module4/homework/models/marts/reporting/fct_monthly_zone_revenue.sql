@@ -1,7 +1,7 @@
 -- Data mart for monthly revenue analysis by pickup zone and service type
 -- This aggregation is optimized for business reporting and dashboards
 -- Enables analysis of revenue trends across different zones and taxi types
-
+with final as (
 select
     -- Grouping dimensions
     coalesce(pickup_zone, 'Unknown Zone') as pickup_zone,
@@ -27,3 +27,9 @@ select
 
 from {{ ref('fct_trips') }}
 group by pickup_zone, revenue_month, service_type
+)
+{# select count(1) from final #}
+
+select sum(total_monthly_trips), revenue_month from final
+where service_type = 'Green' and extract(month from revenue_month) = '10'
+group by 2
