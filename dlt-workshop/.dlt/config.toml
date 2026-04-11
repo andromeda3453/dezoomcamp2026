@@ -1,0 +1,8 @@
+# put your configuration values here
+
+[runtime]
+log_level="WARNING"
+dlthub_telemetry = true
+
+[sources.taxi_data]
+base_url = "https://us-central1-dlthub-analytics.cloudfunctions.net/data_engineering_zoomcamp_api"
