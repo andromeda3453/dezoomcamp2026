@@ -1,6 +1,7 @@
 *.parquet
 *.json
 .env
+data/
 .env-kestra
 .bruin.yml
 logs/runs
